@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /
+# PRE-LAUNCH: Remove this rule after client approves publication.

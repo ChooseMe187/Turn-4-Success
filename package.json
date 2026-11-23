@@ -1,0 +1,11 @@
+{
+  "name": "turning4success-website",
+  "version": "1.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Client-owned static website for Turning 4 Success, deployable through GitHub and Cloudflare Pages",
+  "scripts": {
+    "dev": "node scripts/dev-server.mjs",
+    "test": "node scripts/verify.mjs && node --check public/script.js"
+  }
+}

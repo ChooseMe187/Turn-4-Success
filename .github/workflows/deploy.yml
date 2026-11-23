@@ -1,0 +1,32 @@
+name: Deploy to Cloudflare Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: turning4success-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm test
+      - name: Deploy website and Pages Functions
+        env:
+          CLOUDFLARE_ACCOUNT_ID: c76c1bc8813caf3011dbac728eeaeb7c
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "::error::Add CLOUDFLARE_API_TOKEN as a repository Actions secret before deploying."
+            exit 1
+          fi
+          npx --yes wrangler@4 pages deploy public --project-name turning4success-staging --branch main

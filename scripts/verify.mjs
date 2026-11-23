@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {readFile, stat} from 'node:fs/promises';
+import {join} from 'node:path';
+const dir = 'public';
+for (const p of ['index.html','styles.css','script.js','_headers','robots.txt']) assert.ok((await stat(join(dir,p))).size > 0, `Missing/empty ${p}`);
+const html=await readFile(join(dir,'index.html'),'utf8');
+const js=await readFile(join(dir,'script.js'),'utf8');
+const css=await readFile(join(dir,'styles.css'),'utf8');
+for(const id of ['services','make-ready','managers','contact','faq','quote-form']) assert.match(html,new RegExp(`id=["']${id}["']`),`Missing ${id}`);
+for(const link of ['styles.css','script.js']) assert.ok(html.includes(link),`Missing ${link} reference`);
+for(const name of ['Property Management','Drywall','Pool Cleaning','Painting','Vacant Unit']) assert.ok(html.toLowerCase().includes(name.toLowerCase()),`Missing service ${name}`);
+assert.ok(html.includes('Carlos Rhodes') && html.includes('10 years') && html.includes('8 years'), 'Owner profile was not included');
+assert.match(html, /noindex,nofollow/,'Should not index client-preview version');
+assert.ok(html.includes('turning4successpropertymanagement.com'), 'Expected client-supplied domain in preview');
+assert.ok(css.length>10000,'Unexpected stylesheet size');
+assert.match(html, /Send Quote Request/);
+assert.match(js, /fetch\(form.action/);
+console.log('PASS: complete site files, navigation targets, services, quote form submission, staging index protection.');
