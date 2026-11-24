@@ -20,6 +20,7 @@ jobs:
         with:
           node-version: '22'
       - run: npm test
+      - run: node --check functions/api/quote.js
       - name: Deploy website and Pages Functions
         env:
           CLOUDFLARE_ACCOUNT_ID: c76c1bc8813caf3011dbac728eeaeb7c
